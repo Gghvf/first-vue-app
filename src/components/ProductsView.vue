@@ -10,7 +10,7 @@
         tabindex="0"
       >
         <div class="meat">
-          <div class="product-img">🥩</div>
+          <img src="../assets/meat.png" class="img">
           <h3>Свежее мясо</h3>
           <p class="description">Высший сорт, без антибиотиков, от местных ферм.</p>
         </div>
@@ -22,19 +22,19 @@
         tabindex="0"
       >
         <div class="milk">
-          <div class="product-img">🥛</div>
+          <img src="../assets/meat.png" class="img">
           <h3 class="mh3">Кисломолочные продукты</h3>
           <p class="mh3">Ряженка, йогурт, кефир — 100% натуральные.</p>
         </div>
       </div>
       <div
-        class="product-card"
+        class="card"
         @click="openModal('cheese')"
         role="button"
         tabindex="0"
       >
         <div class="cheese">
-          <div class="product-img">🧀</div>
+          <img src="../assets/meat.png" class="img">
           <h3>Сыры ручной работы</h3>
           <p class="description">Твёрдые и мягкие сыры из коровьего и козьего молока.</p>
         </div>
@@ -180,9 +180,12 @@ function closeModal() {
 .product-card:hover {
   transform: translateY(-4px);
 }
-.product-img {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.img {
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 1rem;
 }
 .product-card h3 {
   margin-bottom: 0.8rem;
