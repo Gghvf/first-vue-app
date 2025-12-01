@@ -22,19 +22,19 @@
         tabindex="0"
       >
         <div class="milk">
-          <img src="../assets/meat.png" class="img">
+          <img src="../assets/moloko.jpg" class="img">
           <h3 class="mh3">Кисломолочные продукты</h3>
           <p class="mh3">Ряженка, йогурт, кефир — 100% натуральные.</p>
         </div>
       </div>
       <div
-        class="card"
+        class="product-card"
         @click="openModal('cheese')"
         role="button"
         tabindex="0"
       >
         <div class="cheese">
-          <img src="../assets/meat.png" class="img">
+          <img src="../assets/cheeses.jpg" class="img">
           <h3>Сыры ручной работы</h3>
           <p class="description">Твёрдые и мягкие сыры из коровьего и козьего молока.</p>
         </div>
@@ -128,9 +128,10 @@ function closeModal() {
 
 <style scoped>
 
-.product-img img {
+.product-img img{
   width: 120px;
   height: 120px;
+  border-radius: 16px;
   object-fit: contain;
   display: block;
   margin: 0 auto 1rem;
@@ -183,6 +184,7 @@ function closeModal() {
 .img {
   width: 240px;
   height: 240px;
+  border-radius: 16px;
   object-fit: contain;
   display: block;
   margin: 0 auto 1rem;
