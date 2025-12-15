@@ -2,7 +2,7 @@
   <div class="page profile">
     <h2>Личный кабинет</h2>
     <p>Привет, {{ user?.email }}!</p>
-    <button @click="logout">Выйти</button>
+    <button @click="logout" class="button">Выйти</button>
 
     <h3 style="margin-top: 2rem;">Корзина</h3>
     <div v-if="cart.length === 0">
@@ -11,7 +11,7 @@
     <div v-else>
       <div v-for="item in cart" :key="item.id" class="cart-item">
         <span>{{ item.name }} × {{ item.quantity }}</span>
-        <button @click="removeFromCart(item.id)">Удалить</button>
+        <button @click="removeFromCart(item.id)" class="button">Удалить</button>
       </div>
       <button class="order-btn" @click="clearCart">Оформить заказ</button>
     </div>
@@ -44,6 +44,14 @@ const clearCart = () => {
 </script>
 
 <style scoped>
+.button{
+  background: var(--primary);
+  color: white;
+  font-weight: 500;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
 .profile {
   padding: 2rem;
 }
