@@ -1,8 +1,10 @@
+<!-- src/ProfileView.vue -->
 <template>
   <div class="page profile">
     <h2>Личный кабинет</h2>
-    <p>Привет, {{ user?.email }}!</p>
-    <button @click="logout" class="button">Выйти</button>
+    <p v-if="user">Привет, {{ user.email }}!</p>
+    <button v-if="user" @click="logout">Выйти</button>
+    <p v-else>Вы не вошли в систему.</p>
 
     <h3 style="margin-top: 2rem;">Корзина</h3>
     <div v-if="cart.length === 0">
@@ -10,8 +12,21 @@
     </div>
     <div v-else>
       <div v-for="item in cart" :key="item.id" class="cart-item">
-        <span>{{ item.name }} × {{ item.quantity }}</span>
-        <button @click="removeFromCart(item.id)" class="button">Удалить</button>
+        <div class="item-info">
+          <img :src="item.img" class="cart-img" />
+          <div class="item-text">
+            <h4>{{ item.name }}</h4>
+            <!-- Отображение количества в зависимости от категории -->
+            <p v-if="item.category === 'milk'">
+              <span v-if="item.liters">{{ item.liters }} л</span>
+              <span v-if="item.bottles"> ({{ item.bottles }} бут.)</span>
+            </p>
+            <p v-else>
+              {{ item.grams }} г
+            </p>
+          </div>
+        </div>
+        <button @click="removeFromCart(item.id)">Удалить</button>
       </div>
       <button class="order-btn" @click="clearCart">Оформить заказ</button>
     </div>
@@ -44,22 +59,35 @@ const clearCart = () => {
 </script>
 
 <style scoped>
-.button{
-  background: var(--primary);
-  color: white;
-  font-weight: 500;
-  padding: 0.4rem 0.6rem;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
 .profile {
   padding: 2rem;
 }
 .cart-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0.8rem 0;
   border-bottom: 1px solid #eee;
+}
+.item-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.cart-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+.item-text h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+.item-text p {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
 }
 .order-btn {
   margin-top: 1rem;
