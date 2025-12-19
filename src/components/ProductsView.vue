@@ -10,7 +10,7 @@
         tabindex="0"
       >
         <div class="meat">
-          <img src="../assets/meat.png" class="img" />
+          <img src="./assets/meat.png" class="img" />
           <h3>Свежее мясо</h3>
           <p class="description">Высший сорт, без антибиотиков, от местных ферм.</p>
         </div>
@@ -22,7 +22,7 @@
         tabindex="0"
       >
         <div class="milk">
-          <img src="../assets/moloko.jpg" class="img" />
+          <img src="./assets/moloko.jpg" class="img" />
           <h3 class="mh3">Кисломолочные продукты</h3>
           <p class="mh3">Ряженка, йогурт, кефир — 100% натуральные.</p>
         </div>
@@ -34,7 +34,7 @@
         tabindex="0"
       >
         <div class="cheese">
-          <img src="../assets/cheeses.jpg" class="img" />
+          <img src="./assets/cheeses.jpg" class="img" />
           <h3>Сыры ручной работы</h3>
           <p class="description">Твёрдые и мягкие сыры из коровьего и козьего молока.</p>
         </div>
@@ -58,7 +58,38 @@
               </div>
               <h3 class="borderline">{{ item.name }}</h3>
               <p class="borderline">{{ item.desc }}</p>
-              <!-- Кнопка "В корзину" внутри каждой подкарточки -->
+
+              <!-- Поле ввода количества -->
+              <div class="quantity-controls">
+                <!-- Для молочной продукции -->
+                <template v-if="activeModal === 'milk'">
+                  <input
+                    v-model.number="item.quantityLiters"
+                    type="number"
+                    min="0.5"
+                    step="0.5"
+                    placeholder="Литры"
+                  />
+                  <input
+                    v-model.number="item.quantityBottles"
+                    type="number"
+                    min="1"
+                    placeholder="Бутылки"
+                  />
+                </template>
+                <!-- Для мяса и сыра -->
+                <template v-else>
+                  <input
+                    v-model.number="item.quantityGrams"
+                    type="number"
+                    min="250"
+                    step="250"
+                    placeholder="Граммы"
+                  />
+                </template>
+              </div>
+
+              <!-- Кнопка "В корзину" -->
               <button class="add-to-cart" @click.stop="addToCart(item)">
                 В корзину
               </button>
@@ -74,52 +105,53 @@
 <script setup>
 import { ref, computed, inject } from 'vue'
 
-// Импортируем изображения для подкарточек
-import beefImg from '../assets/beef.png'
-import porkImg from '../assets/pig.png'
-import chickenImg from '../assets/chicken.png'
-import milkImg from '../assets/milk.png'
-import yogurtImg from '../assets/yogurt.png'
-import kefirImg from '../assets/kefir.png'
-import cheese1 from '../assets/cheese1.png'
-import cheese2 from '../assets/cheese2.png'
-import cheese3 from '../assets/cheese3.png'
+// Импорты изображений
+import beefImg from './assets/beef.png'
+import porkImg from './assets/pig.png'
+import chickenImg from './assets/chicken.png'
+import milkImg from './assets/milk.png'
+import yogurtImg from './assets/yogurt.png'
+import kefirImg from './assets/kefir.png'
+import cheese1 from './assets/cheese1.png'
+import cheese2 from './assets/cheese2.png'
+import cheese3 from './assets/cheese3.png'
 
 const activeModal = ref(null)
 
-const modalData = {
+// Инициализация данных с полями для ввода
+const modalData = ref({
   meat: {
     title: 'Мясная продукция',
     items: [
-      { img: beefImg, name: 'Говядина', desc: 'Мраморная, высший сорт', color: 'var(--chatbotback)' },
-      { img: porkImg, name: 'Свинина', desc: 'Фермерская, без гормонов', color: 'var(--chatbotback)' },
-      { img: chickenImg, name: 'Курица', desc: 'Домашняя, на зелёном корме', color: 'var(--chatbotback)' }
+      { img: beefImg, name: 'Говядина', desc: 'Мраморная, высший сорт', color: 'var(--chatbotback)', quantityGrams: 250 },
+      { img: porkImg, name: 'Свинина', desc: 'Фермерская, без гормонов', color: 'var(--chatbotback)', quantityGrams: 250 },
+      { img: chickenImg, name: 'Курица', desc: 'Домашняя, на зелёном корме', color: 'var(--chatbotback)', quantityGrams: 250 }
     ]
   },
   milk: {
     title: 'Кисломолочные продукты',
     items: [
-      { img: milkImg, name: 'Свежее молоко', desc: 'Пастеризованное, 3.2%', color: 'white' },
-      { img: yogurtImg, name: 'Натуральный йогурт', desc: 'Без сахара и добавок', color: 'white' },
-      { img: kefirImg, name: 'Кефир', desc: '1% и 3.2%, на закваске', color: 'white' }
+      { img: milkImg, name: 'Свежее молоко', desc: 'Пастеризованное, 3.2%', color: 'white', quantityLiters: 1, quantityBottles: 1 },
+      { img: yogurtImg, name: 'Натуральный йогурт', desc: 'Без сахара и добавок', color: 'white', quantityLiters: 1, quantityBottles: 1 },
+      { img: kefirImg, name: 'Кефир', desc: '1% и 3.2%, на закваске', color: 'white', quantityLiters: 1, quantityBottles: 1 }
     ]
   },
   cheese: {
     title: 'Сыры',
     items: [
-      { img: cheese1, name: 'Твёрдый сыр', desc: 'Из коровьего молока', color: 'var(--secondary)' },
-      { img: cheese2, name: 'Мягкий сыр', desc: 'С плесенью или без', color: 'var(--secondary)' },
-      { img: cheese3, name: 'Сыр из козьего молока', desc: 'Ручная работа', color: 'var(--secondary)' }
+      { img: cheese1, name: 'Твёрдый сыр', desc: 'Из коровьего молока', color: 'var(--secondary)', quantityGrams: 250 },
+      { img: cheese2, name: 'Мягкий сыр', desc: 'С плесенью или без', color: 'var(--secondary)', quantityGrams: 250 },
+      { img: cheese3, name: 'Сыр из козьего молока', desc: 'Ручная работа', color: 'var(--secondary)', quantityGrams: 250 }
     ]
   }
-}
+})
 
 const modalTitle = computed(() => {
-  return activeModal.value ? modalData[activeModal.value].title : ''
+  return activeModal.value ? modalData.value[activeModal.value].title : ''
 })
 
 const currentDetails = computed(() => {
-  return activeModal.value ? modalData[activeModal.value].items : []
+  return activeModal.value ? modalData.value[activeModal.value].items : []
 })
 
 function openModal(type) {
@@ -134,9 +166,27 @@ function closeModal() {
 
 // Добавление в корзину
 const store = inject('store')
-const addToCart = (product) => {
-  store.addToCart(product)
-  alert(`Добавлено в корзину: ${product.name}`)
+const addToCart = (item) => {
+  // Подготовим объект товара для корзины
+  const productToAdd = {
+    id: `${item.name}-${Date.now()}`, // Уникальный ID
+    name: item.name,
+    img: item.img,
+    category: activeModal.value, // 'meat', 'milk', 'cheese'
+    quantity: 1 // всегда 1, т.к. мы добавляем отдельно
+  }
+
+  // Для молока — добавляем литры и бутылки
+  if (activeModal.value === 'milk') {
+    productToAdd.liters = item.quantityLiters || 1
+    productToAdd.bottles = item.quantityBottles || 1
+  } else {
+    // Для мяса и сыра — добавляем граммы
+    productToAdd.grams = item.quantityGrams || 250
+  }
+
+  store.addToCart(productToAdd)
+  alert(`Добавлено в корзину: ${productToAdd.name}`)
 }
 </script>
 
@@ -303,7 +353,7 @@ const addToCart = (product) => {
   color: #333;
 }
 
-/* --- Кнопка "В корзину" внутри подкарточки --- */
+/* --- Кнопка "В корзину" --- */
 .add-to-cart {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
@@ -318,5 +368,21 @@ const addToCart = (product) => {
 
 .add-to-cart:hover {
   opacity: 0.9;
+}
+
+/* --- Поля ввода количества --- */
+.quantity-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
+}
+
+.quantity-controls input {
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  text-align: center;
 }
 </style>
